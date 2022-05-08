@@ -54,28 +54,28 @@ model_path = "singleZone.3dm"
 gh_path = "geometry"
 file_path = rhino_dir + model_path
 print(file_path)
-# read the 3dm file
+
+# read the 3dm file and encode the geometry for transit
 rhFile = rhino3dm.File3dm.Read(file_path)
+modelBreps = getBreps(rhFile.Objects)
 
-
-context_breps = getBreps(rhFile.Objects)
-
-
+transit_modelBreps = json.loads(modelBreps[0]["data"])
+transit_modelBreps = json.dumps(transit_modelBreps)
 
 print('Geometry encoded ready to go!')
 
-"""# Inputs
+# # Inputs
 
-# adjust between 0 and 0.9
-open_space_ratio = 0.6
+# # adjust between 0 and 0.9
+# open_space_ratio = 0.6
 
-# adjust between 1 and 50
-floor_height = 20
+# # adjust between 1 and 50
+# floor_height = 20
 
 # ---------------------
 
 
-rhino3dm.GeometryBase.
+"""rhino3dm.GeometryBase.
 
 # payload
 geo_payload = {
