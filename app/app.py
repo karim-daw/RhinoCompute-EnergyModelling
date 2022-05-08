@@ -59,27 +59,27 @@ print(file_path)
 rhFile = rhino3dm.File3dm.Read(file_path)
 modelBreps = getBreps(rhFile.Objects)
 
-transit_modelBreps = json.loads(modelBreps[0]["data"])
-transit_modelBreps = json.dumps(transit_modelBreps)
+roomGeometry = json.loads(modelBreps[0]["data"])
+roomGeometry = json.dumps(roomGeometry)
 
 print('Geometry encoded ready to go!')
 
 # # Inputs
 
 # # adjust between 0 and 0.9
-# open_space_ratio = 0.6
+roomName = "MyPythonRoom"
+climateZoneNumber = 4 # mixed
+modelName = "MyPythonModel"
+apertureFromInput = False
+wwr = 0.5
+runSimulation = True
 
-# # adjust between 1 and 50
-# floor_height = 20
 
-# ---------------------
-
-
-"""rhino3dm.GeometryBase.
+#print((roomGeometry))
 
 # payload
 geo_payload = {
-    "algo": gh_energy_encoded,
+    "algo": gh_energy_decoded,
     "pointer": None,
     "values": [
         {
@@ -88,47 +88,103 @@ geo_payload = {
                 "{ 0; }": [
                     {
                         "type": "Rhino.Geometry.Brep",
-                        "data": RoomGeometry
+                        "data": roomGeometry
                     }
                 ]
             }
         },
         {
-            "ParamName": "floor_height",
+            "ParamName": "RoomName",
+            "InnerTree":{
+                "{ 0; }": [
+                    {
+                        "type": "System.String",
+                        "data": roomName
+                    }
+                ]
+            }
+        },
+        {
+            "ParamName": "ClimateZoneNumber",
             "InnerTree":{
                 "{ 0; }": [
                     {
                         "type": "System.Double",
-                        "data": floor_height
+                        "data": climateZoneNumber
                     }
                 ]
             }
         },
         {
-            "ParamName": "site",
+            "ParamName": "ModelName",
             "InnerTree":{
                 "{ 0; }": [
                     {
-                        "type": "Rhino.Geometry.Curve",
-                        "data": site_curve
+                        "type": "System.String",
+                        "data": modelName
                     }
                 ]
             }
-        }
+        },
+        {
+            "ParamName": "ApertureFromInput",
+            "InnerTree":{
+                "{ 0; }": [
+                    {
+                        "type": "System.Double",
+                        "data": apertureFromInput
+                    }
+                ]
+            }
+        },
+        {
+            "ParamName": "WWR",
+            "InnerTree":{
+                "{ 0; }": [
+                    {
+                        "type": "System.Double",
+                        "data": wwr
+                    }
+                ]
+            }
+        },
+        {
+            "ParamName": "RunSimulation",
+            "InnerTree":{
+                "{ 0; }": [
+                    {
+                        "type": "System.Bool",
+                        "data": runSimulation
+                    }
+                ]
+            }
+        },
     ]
 }
+
+
 
 # send HTTP request to Rhino Compute Server
 res = requests.post(compute_url + "grasshopper", json=geo_payload)
 
-# print("status code: {}".format(res.status_code))
+print("status code: {}".format(res.status_code))
 
 # deserialize response object
 response_object = json.loads(res.content)['values']
 
-geometry_output = [result for result in response_object if result['ParamName'] == 'RH_OUT:geometry'][0]['InnerTree']['{0;0;0;0;0}']
-print("number of buildings generated: {}".format(len(geometry_output)))
+print(len(response_object))
+#print(response_object[0])
 
+computed_eui = [result for result in response_object if result['ParamName'] == 'EUI'][0]['InnerTree']['{0}'][0]['data']
+print('computed EUI: {}'.format(computed_eui))
+
+
+
+
+#  [result for result in response_object if result['ParamName'] == 'RH_OUT:geometry'][0]['InnerTree']['{0;0;0;0;0}']
+# print("Computed EUI: : {}".format(len(geometry_output)))
+
+"""
 floor_area = [result for result in response_object if result['ParamName'] == 'RH_OUT:max_area'][0]['InnerTree']['{0}'][0]['data']
 print('max floor area: {}'.format(floor_area))
 
