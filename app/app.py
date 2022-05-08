@@ -70,7 +70,7 @@ print('Geometry encoded ready to go!')
 roomName = "MyPythonRoom"
 climateZoneNumber = 4 # mixed
 modelName = "MyPythonModel"
-apertureFromInput = False
+apertureFromInput = True
 wwr = 0.5
 runSimulation = True
 
