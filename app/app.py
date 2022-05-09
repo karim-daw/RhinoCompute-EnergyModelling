@@ -179,10 +179,8 @@ computed_eui = [result for result in response_object if result['ParamName'] == '
 print('computed EUI: {}'.format(computed_eui))
 
 
-
-
-#  [result for result in response_object if result['ParamName'] == 'RH_OUT:geometry'][0]['InnerTree']['{0;0;0;0;0}']
-# print("Computed EUI: : {}".format(len(geometry_output)))
+sql_object = [result for result in response_object if result['ParamName'] == 'sql'][0]['InnerTree']['{0}'][0]['data']
+print("Computed SQL: : {}".format(len(sql_object)))
 
 """
 floor_area = [result for result in response_object if result['ParamName'] == 'RH_OUT:max_area'][0]['InnerTree']['{0}'][0]['data']
